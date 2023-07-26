@@ -1,19 +1,25 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.Result;
 import com.sky.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -60,4 +66,48 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
+
+
+
+    @Override
+    public void save(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+
+        //Spring的对象属性拷贝工具类
+        BeanUtils.copyProperties(employeeDTO,employee);
+//        private Long id;
+//        private String username;
+//        private String name;
+//        private String phone;
+//        private String sex;
+//        private String idNumber; 已经复制
+
+
+//        剩余:
+//        private Integer status; //1正常, 0锁定
+//        private String password;
+
+//        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//        private LocalDateTime createTime;
+//
+//        //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//        private LocalDateTime updateTime;
+//
+//        private Long createUser;
+//
+//        private Long updateUser;
+
+        employee.setStatus(StatusConstant.ENABLE);
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //TODO 新增用户的更新者 创建者都是硬编码, 后期需都改为当前用户的id
+        employee.setUpdateUser(10L);
+        employee.setCreateUser(10L);
+
+        employeeMapper.insert(employee);
+
+//        return Result.success();
+    };
 }

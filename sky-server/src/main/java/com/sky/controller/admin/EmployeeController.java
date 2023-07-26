@@ -80,11 +80,11 @@ public class EmployeeController {
     //json格式的数据 post请求 @RequestBody
     //最上面这个类的注解已经加过地址了@RequestMapping("/admin/employee")
     @PostMapping
+    @ApiOperation("新增员工")
     public Result save(@RequestBody EmployeeDTO employeeDTO){
-        Result result = new Result();
-
-
-        return result;
+        log.info("新增员工: {}",employeeDTO);
+        employeeService.save(employeeDTO);
+        return Result.success();
     }
 
 }
