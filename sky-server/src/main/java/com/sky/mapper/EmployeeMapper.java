@@ -26,4 +26,7 @@ public interface EmployeeMapper {
 
     //分页查询, 用动态SQL, 去配置文件写(EmployeeMapper.xml)
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    //动态修改属性, 去配置文件
+    void update(Employee employee);
 }
