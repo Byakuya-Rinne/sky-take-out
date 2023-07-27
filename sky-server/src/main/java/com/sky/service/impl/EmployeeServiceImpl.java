@@ -1,15 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +25,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -49,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //密码比对
         // TODO 后期需要进行md5加密，然后再进行比对
         //对前端传入的密码进行MD5加密
-        password = DigestUtils.md5DigestAsHex(password.getBytes());
+        //password = DigestUtils.md5DigestAsHex(password.getBytes());
 
 
         if (!password.equals(employee.getPassword())) {
@@ -67,14 +73,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
-
     @Override
-    public void save(EmployeeDTO employeeDTO){
+    public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
 
         //Spring的对象属性拷贝工具类
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 //        private Long id;
 //        private String username;
 //        private String name;
@@ -102,11 +106,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
-        //TODO 新增用户的更新者 创建者都是硬编码, 后期需都改为当前用户的id
-        employee.setUpdateUser(10L);
-        employee.setCreateUser(10L);
+        //TODO 新增用户的更新者 创建者都是硬编码, 后期需都改为当前用户的id DONE
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setCreateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
 
-    };
+    }
+
+    ;
+
+
+    /*
+     * 员工分页查询
+     * */
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        //开始分页查询, 参数: 页码 每页记录数
+//        select * from employee limit 0,11
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+//        PageHelper规定返回类型是page, 泛型参数用实体
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+
+        return new PageResult(total, records);
+    }
 }
