@@ -29,4 +29,8 @@ public interface EmployeeMapper {
 
     //动态修改属性, 去配置文件
     void update(Employee employee);
+
+    //根据id查询员工信息
+    @Select("select * from employee where id = #{id}")
+    Employee getById(Long id);
 }
