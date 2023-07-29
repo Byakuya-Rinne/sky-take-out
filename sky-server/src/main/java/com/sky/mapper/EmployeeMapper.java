@@ -15,6 +15,7 @@ public interface EmployeeMapper {
 
     /**
      * 根据用户名查询员工
+     *
      * @param username
      * @return
      */
@@ -30,8 +31,8 @@ public interface EmployeeMapper {
     //分页查询, 用动态SQL, 去配置文件写(EmployeeMapper.xml)
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
-    //动态修改属性, 去配置文件
     @Autofill(value = OperationType.UPDATE)
+    //动态修改属性, 去配置文件
     void update(Employee employee);
 
     //根据id查询员工信息
