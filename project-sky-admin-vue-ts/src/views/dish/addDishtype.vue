@@ -196,8 +196,7 @@ export default class extends Vue {
         { required: true, message: '请选择菜品分类', trigger: 'change' }
       ],
       image: {
-        required: true,
-        message: '菜品图片不能为空'
+        message: '菜品图片可以为空'
       },
       price: [
         {
@@ -346,7 +345,7 @@ export default class extends Vue {
     ;(this.$refs[formName] as any).validate((valid: any) => {
       console.log(valid, 'valid')
       if (valid) {
-        if (!this.ruleForm.image) return this.$message.error('菜品图片不能为空')
+        if (!this.ruleForm.image) return this.$message.error('菜品图片不能为空哦')
         let params: any = { ...this.ruleForm }
         // params.flavors = this.dishFlavors
         params.status =
