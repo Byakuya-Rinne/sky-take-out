@@ -17,6 +17,8 @@ import java.util.List;
  * 分类管理
  */
 @RestController
+//@Controller 和 @RequestBody
+//RequestBody 把这个类所有方法返回的数据以Json格式返回给service
 @RequestMapping("/admin/category")
 @Api(tags = "分类相关接口")
 @Slf4j

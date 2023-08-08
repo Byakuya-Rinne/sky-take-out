@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 //RetentionPolicy.RUNTIME	注解不仅被保存到class文件中，jvm加载class文件之后，仍然存在	运行时也存在	需要在运行时去动态获取注解信息
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Autofill {
-    //指定数据库操作类型, 内容是UPDATE 和 INSERT
+    //指定数据库操作类型, 内容可能是UPDATE 和 INSERT
     OperationType value();
 
 }
